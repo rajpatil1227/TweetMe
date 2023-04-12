@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0;
+            background-color: rgb(3, 23, 59);
+        }
+        .outer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 120vh;
+            height: 75vh;
+            background-color: rgba(5, 127, 208, 0.852);
+            margin: auto;
+            position: relative;
+            top: 100px;
+            border-radius: 5px;
+        }
+
+      /* Center the inner div */
+      .inner {
+            justify-content: center; 
+            align-items: center;
+            width: 60%;
+            height: 60%;
+            background-color: white;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        #tweetMe{
+            position: absolute;
+            right: 2px;
+            color: rgb(0, 166, 255);
+            font-size: 30px;
+        }
+
+        #tweetMe:hover{
+            rotate: y 360deg;
+            cursor: pointer;
+        }
+
+        #author{
+            position: absolute;
+            right: 2px;
+            bottom: 25%;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        }
+
+        #fontQ{
+            position: absolute;
+            left: 10%;
+            top: 10%;
+            font-size:48px;
+            color: rgb(190, 189, 189);
+        }
+
+        #quotes{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-family: cursive;
+            color: gray;
+            font-size: larger;
+        }
+
+        #newQ{
+            position: absolute;
+            width: 100%;
+            background-color: rgb(3, 117, 179);
+            border-color: white;
+            height: 30px;
+            border-radius: 2px;
+            bottom: 0;
+            color: white;
+            font-family: cursive;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner">
+            <div data-aos="zoom-in" id="quotes"></div>
+            <div id="author"></div>
+            <i class="fa fa-twitter" id="tweetMe"></i>
+            <button id="newQ">New Quotes</button>
+            <i class="fa fa-quote-left" id="fontQ"></i>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>    
+    <script>
+        AOS.init();
+        const quotes = document.getElementById("quotes");
+        const author = document.getElementById("author");
+        const newQ = document.getElementById("newQ");
+        const tweetMe = document.getElementById("tweetMe");
+
+        let realData = "";
+        let quotesData ="";
+
+        const tweetNow = () =>{
+           let tweetPost = `https://twitter.com/intent/tweet?text=${quotesData.text}`;
+           window.open(tweetPost);    
+        }
+
+        const getNewQuotes = () => {
+            let randnum = Math.floor(Math.random() * 10);
+            quotesData = realData[randnum];
+            quotes.innerText = `${quotesData.text}`;
+            quotesData.author == null ? (author.innerText = unKnown) : (author.innerText = `${quotesData.author}`);
+        };
+
+        const getQuotes = async () =>{
+            const api = "https://type.fit/api/quotes";
+            try {
+                let data = await fetch(api);
+                realData = await data.json();
+                getNewQuotes();
+            } catch (error) {
+                
+            }
+        };
+
+        tweetMe.addEventListener('click', tweetNow);
+        newQ.addEventListener("click", getNewQuotes);
+        getQuotes();
+    </script>
+</body>
+</html>
